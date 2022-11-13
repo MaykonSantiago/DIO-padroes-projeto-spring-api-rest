@@ -1,5 +1,7 @@
 package one.digitalinnovation.gof.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("clientes")
-public class ClienteRestController {
+public class ClienteRestController extends ValidacaoController {
 
     @Autowired
     private ClienteService clienteService;
@@ -34,7 +36,7 @@ public class ClienteRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> inserir(@RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> inserir(@RequestBody @Valid Cliente cliente) {
         clienteService.inserir(cliente);
         return ResponseEntity.ok(cliente);
     }
