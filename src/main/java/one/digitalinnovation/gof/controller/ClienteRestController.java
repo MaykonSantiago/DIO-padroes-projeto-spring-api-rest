@@ -8,6 +8,13 @@ import one.digitalinnovation.gof.model.Cliente;
 import one.digitalinnovation.gof.service.ClienteService;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * Esse {@link RestController} representa nossa <b>Facade</b>, pois abstrai toda
+ * a complexidade de integrações (Banco de Dados H2 e API do ViaCEP) em uma
+ * interface simples e coesa (API REST).
+ * 
+ * @author maykon
+ */
 
 @RestController
 @RequestMapping("clientes")

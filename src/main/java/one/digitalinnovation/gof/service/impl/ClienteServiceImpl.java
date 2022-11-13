@@ -12,6 +12,14 @@ import one.digitalinnovation.gof.model.EnderecoRepository;
 import one.digitalinnovation.gof.service.ClienteService;
 import one.digitalinnovation.gof.service.ViaCepService;
 
+/**
+ * Implementação da <b>Strategy</b> {@link ClienteService}, a qual pode ser
+ * injetada pelo Spring (via {@link Autowired}). Com isso, como essa classe é um
+ * {@link Service}, ela será tratada como um <b>Singleton</b>.
+ * 
+ * @author maykon
+ */
+
 @Service
 public class ClienteServiceImpl implements ClienteService{
 
