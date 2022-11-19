@@ -107,4 +107,37 @@ public class Endereco {
     public void setSiafi(String siafi) {
     this.siafi = siafi;
     }
+
+    public Endereco atualizaEndereco (Endereco novoEndereco) {
+
+        if (novoEndereco.getLogradouro() != null){
+            this.setLogradouro(novoEndereco.getLogradouro());
+        }
+        if (novoEndereco.getComplemento() != null){
+            this.setComplemento(novoEndereco.getComplemento());
+        }
+        if (novoEndereco.getBairro() != null){
+            this.setBairro(novoEndereco.getBairro());
+        }
+        if (novoEndereco.getLocalidade() != null){
+            this.setLocalidade(novoEndereco.getLocalidade());
+        }
+        if (novoEndereco.getUf() != null){
+            this.setUf(novoEndereco.getUf());
+        }
+        if (novoEndereco.getIbge() != null){
+            this.setIbge(novoEndereco.getIbge());
+        }
+        if (novoEndereco.getGia() != null){
+            this.setGia(novoEndereco.getGia());
+        }
+        if (novoEndereco.getDdd() != null){
+            this.setDdd(novoEndereco.getDdd());
+        }
+        if (novoEndereco.getSiafi() != null){
+            this.setSiafi(novoEndereco.getSiafi());
+        }
+
+        return this;
+    }
 }
