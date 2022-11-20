@@ -1,7 +1,13 @@
 package one.digitalinnovation.gof.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Os atributos desse modelo foram gerados automaticamente pelo site
@@ -27,6 +33,18 @@ public class Endereco {
     private String gia;
     private String ddd;
     private String siafi;
+
+    @OneToMany(mappedBy = "endereco")
+    @JsonIgnore
+    List<Cliente> cliente;
+
+    public List<Cliente> getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(List<Cliente> cliente) {
+        this.cliente = cliente;
+    }
 
     public String getCep() {
     return cep;
@@ -136,6 +154,9 @@ public class Endereco {
         }
         if (novoEndereco.getSiafi() != null){
             this.setSiafi(novoEndereco.getSiafi());
+        }
+        if (novoEndereco.getCliente() != null){
+            this.cliente.addAll(novoEndereco.getCliente());
         }
 
         return this;

@@ -36,15 +36,15 @@ public class ClienteRestController extends ValidacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> inserir(@RequestBody @Valid Cliente cliente) {
-        clienteService.inserir(cliente);
-        return ResponseEntity.ok(cliente);
+    public ResponseEntity<Cliente> inserir(@RequestBody @Valid Cliente cliente) throws Exception {
+        Cliente resposta = clienteService.inserir(cliente);
+        return ResponseEntity.ok(resposta);
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> atualizar(@RequestBody Cliente cliente) {
-        clienteService.atualizar(cliente);
-        return ResponseEntity.ok(cliente);
+    public ResponseEntity<Cliente> atualizar(@RequestBody Cliente cliente) throws Exception {
+        Cliente resposta = clienteService.atualizar(cliente);
+        return ResponseEntity.ok(resposta);
     }
 
     @DeleteMapping("/{id}")

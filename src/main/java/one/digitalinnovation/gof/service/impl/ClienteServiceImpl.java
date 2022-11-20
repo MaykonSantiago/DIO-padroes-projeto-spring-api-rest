@@ -3,6 +3,7 @@ package one.digitalinnovation.gof.service.impl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.webjars.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import one.digitalinnovation.gof.model.Cliente;
@@ -10,7 +11,7 @@ import one.digitalinnovation.gof.model.ClienteRepository;
 import one.digitalinnovation.gof.model.Endereco;
 import one.digitalinnovation.gof.model.EnderecoRepository;
 import one.digitalinnovation.gof.service.ClienteService;
-import one.digitalinnovation.gof.service.ViaCepService;
+import one.digitalinnovation.gof.service.EnderecoService;
 
 /**
  * Implementação da <b>Strategy</b> {@link ClienteService}, a qual pode ser
@@ -30,7 +31,7 @@ public class ClienteServiceImpl implements ClienteService{
     private EnderecoRepository enderecoRepository;
 
     @Autowired
-    private ViaCepService viaCepService;
+    private EnderecoService enderecoService;
 
     @Override
     public Iterable<Cliente> buscarTodos() {
@@ -45,27 +46,45 @@ public class ClienteServiceImpl implements ClienteService{
     }
 
     @Override
-    public void inserir(Cliente cliente) {
-        salvarClienteComCep(cliente);
-    }
+    public Cliente inserir(Cliente cliente) throws Exception {
+        try{
+            Optional<Endereco> endereco = enderecoRepository.findById(cliente.getEndereco().getCep());
+            if(endereco.isEmpty()) {
+                enderecoService.inserir(cliente.getEndereco());
+                cliente.setEndereco(enderecoRepository.findById(cliente.getEndereco().getCep()).get());
+                clienteRepository.save(cliente);
+                return clienteRepository.findById(cliente.getId()).get();
+            }
 
-    @Override
-    public void atualizar(Cliente cliente) {
-        Optional<Cliente> clienteBd = clienteRepository.findById(cliente.getId());
-        if (clienteBd.isPresent()){
-            salvarClienteComCep(cliente);
+            cliente.setEndereco(endereco.get());
+            clienteRepository.save(cliente);
+
+            return clienteRepository.findById(cliente.getId()).get();
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
     }
 
-    public void salvarClienteComCep(Cliente cliente) {
-        String cep = cliente.getEndereco().getCep();
-        Endereco endereco = enderecoRepository.findById(cep).orElseGet(() -> {
-            Endereco novoEndereco = viaCepService.consultarCep(cep);
-            enderecoRepository.save(novoEndereco);
-            return novoEndereco;
-        });
-        cliente.setEndereco(endereco);
-        clienteRepository.save(cliente);
+    @Override
+    public Cliente atualizar(Cliente cliente) throws Exception {
+        Cliente clienteBd = clienteRepository.findById(cliente.getId())
+            .orElseThrow(() -> new NotFoundException("Cliente não encontrado"));
+
+        
+        Optional<Endereco> endereco = enderecoRepository.findById(cliente.getEndereco().getCep());
+        try{
+            if(endereco.isEmpty()) {
+                Endereco enderecoSalvo = enderecoService.inserir(cliente.getEndereco());
+                cliente.setEndereco(enderecoSalvo);
+            }
+
+            clienteBd = clienteBd.atualizaCliente(cliente);
+            clienteRepository.save(clienteBd);
+            
+            return clienteRepository.findById(cliente.getId()).get();
+        } catch(Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
     @Override
